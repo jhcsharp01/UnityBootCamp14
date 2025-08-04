@@ -4,16 +4,16 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - s1
+  - Enemy
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Red
+  - 
   - Water
   - UI
-  - Yellow
-  - Ground
+  - 
+  - 
   - 
   - 
   - 

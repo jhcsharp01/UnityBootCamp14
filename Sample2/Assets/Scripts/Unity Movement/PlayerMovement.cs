@@ -1,63 +1,59 @@
 using UnityEngine;
 
-//1) ÀÌ ½ºÅ©¸³Æ®¸¦ »ç¿ëÇÏ±â À§ÇØ¼­´Â Rigidbody ÄÄÆ÷³ÍÆ®°¡ ¿ä±¸µË´Ï´Ù.
+//1) ì´ ìŠ¤í¬ë¦½íŠ¸ë¥¼ ì‚¬ìš©í•˜ê¸° ìœ„í•´ì„œëŠ” Rigidbody ì»´í¬ë„ŒíŠ¸ê°€ ìš”êµ¬ë©ë‹ˆë‹¤.
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerMovement : MonoBehaviour
 {
     //[public]
-    //ÀÌµ¿ ¼Óµµ (speed)
+    //ì´ë™ ì†ë„ (speed)
     public float speed;
-    //Á¡ÇÁ ÆÄ¿ö ¼öÄ¡ (jp)
+    //ì í”„ íŒŒì›Œ ìˆ˜ì¹˜ (jp)
     public float jp;
-    //¶¥ ·¹ÀÌ¾î È®ÀÎ(·¹ÀÌ¾î ¸¶½ºÅ©) (ground)
+    //ë•… ë ˆì´ì–´ í™•ì¸(ë ˆì´ì–´ ë§ˆìŠ¤í¬) (ground)
     public LayerMask ground;
 
     //[private]
-    //¸®Áöµå¹Ùµğ (rb)
+    //ë¦¬ì§€ë“œë°”ë”” (rb)
     private Rigidbody rb;
-    //¶¥À» ¹âÀº »óÅÂÀÎÁö Ã¼Å© (isGrounded)
-    private bool isGrounded;
+    //ë•…ì„ ë°Ÿì€ ìƒíƒœì¸ì§€ ì²´í¬ (isGrounded)
+   // private bool isGrounded;
 
 
     void Start()
     {
-        //¸®Áöµå ¹Ùµğ¿¡ ´ëÇÑ ¿¬°á
+        //ë¦¬ì§€ë“œ ë°”ë””ì— ëŒ€í•œ ì—°ê²°
         rb = GetComponent<Rigidbody>(); 
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Å° ÀÔ·Â
+        //í‚¤ ì…ë ¥
         var x = Input.GetAxis("Horizontal");
         var z = Input.GetAxis("Vertical");
+        //ë°©í–¥ ì„¤ê³„(ì •ê·œí™” ì‘ì—… ì™„ë£Œ)
+        Vector3 dir = new Vector3(x, 0, z).normalized;
 
+        //ì´ë™ ì†ë„ ì„¤ì •
+        Vector3 velocity = new Vector3(dir.x * speed, dir.y, dir.z * speed);
+        //ê³„ì‚°í•œ ì†ë ¥ ì²˜ë¦¬(YëŠ” ìœ ì§€)
+        rb.linearVelocity = new Vector3(velocity.x, rb.linearVelocity.y, velocity.z);
+        //ë¦¬ì§€ë“œ ë°”ë””ì˜ ì†ì„±
+        //linearVelocity = ì„ í˜• ì†ë„(ë¬¼ì²´ê°€ ê³µê°„ ìƒì—ì„œ ì´ë™í•˜ëŠ” ì†ë„)
+        //angularVelocity = ê° ì†ë„ (ë¬¼ì²´ê°€ íšŒì „í•˜ëŠ” ì†ë„)
 
-        //¹æÇâ ¼³°è
-        Vector3 dir = new Vector3(x, 0, z);
-
-        //ÀÌµ¿ ¼Óµµ ¼³Á¤
-        Vector3 velocity = dir * speed;
-
-        rb.linearVelocity = velocity;
-        //¸®Áöµå ¹ÙµğÀÇ ¼Ó¼º
-        //linearVelocity = ¼±Çü ¼Óµµ(¹°Ã¼°¡ °ø°£ »ó¿¡¼­ ÀÌµ¿ÇÏ´Â ¼Óµµ)
-        //angularVelocity = °¢ ¼Óµµ (¹°Ã¼°¡ È¸ÀüÇÏ´Â ¼Óµµ)
-
-
-        //Á¡ÇÁ ±â´É Ãß°¡
-        if(Input.GetKeyDown(KeyCode.Space) && IsGrounded())
+        //ì í”„ ê¸°ëŠ¥ ì¶”ê°€
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
         {
-            rb.AddForce(Vector3.up * jp, ForceMode.Impulse);
-            //ForceMode.Impulse : ¼ø°£ÀûÀÎ Èû
-            //ForceMode.Force : Áö¼ÓÀûÀÎ Èû
+            rb.AddForce(new Vector3(0, jp, 0), ForceMode.Impulse);
+            //ForceMode.Impulse : ìˆœê°„ì ì¸ í˜
+            //ForceMode.Force : ì§€ì†ì ì¸ í˜
         }
-
     }
 
     private bool IsGrounded()
     {
-        //¾Æ·¡ ¹æÇâÀ¸·Î 1¸¸Å­ ·¹ÀÌ¸¦ ½÷¼­ ·¹ÀÌ¾î Ã¼Å©
+        //ì•„ë˜ ë°©í–¥ìœ¼ë¡œ 1ë§Œí¼ ë ˆì´ë¥¼ ì´ì„œ ë ˆì´ì–´ ì²´í¬
         return Physics.Raycast(transform.position, Vector3.down, 1.0f, ground);
     }
 }
