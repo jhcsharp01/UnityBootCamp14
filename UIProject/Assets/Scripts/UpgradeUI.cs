@@ -77,13 +77,27 @@ public class UpgradeUI : MonoBehaviour
         }
         else
         {
+            // 골드 외 재료 확인(0은 골드이므로 1부터 시작하면 제외되겟죠?)
+            for (int i = 1; i < requiredMaterials.Length; i++)
+            {
+                string itemName = requiredMaterials[i].Trim(); // Trim()은 안전성을 위한 코드
+                if (!inventory.HasItem(itemName))
+                {
+                    Debug.Log($"{itemName}이(가) 부족합니다.");
+                    return false;
+                }
+            }
             inventory.gold -= gold_value;
             //남은 아이템이 인벤토리에 존재하는 아이템이라면
             //카운트를 감소하고 강화하기
+            for (int i = 1; i < requiredMaterials.Length; i++)
+            {
+                string itemName = requiredMaterials[i].Trim();
+                //inventory.UseItem(itemName);
+            }
         }
-            return true;
+        return true;
     }
-
     private void UpdateUI()
     {
         icon_text.text = $"마법사 + {upgrade}";
